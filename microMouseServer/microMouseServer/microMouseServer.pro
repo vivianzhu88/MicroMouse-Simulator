@@ -15,7 +15,8 @@ TEMPLATE = app
 SOURCES += mazegui.cpp\
         main.cpp \
         micromouseserver.cpp \
-    mazeBase.cpp
+    mazeBase.cpp \
+    studentai.cpp
 
 
 HEADERS  += micromouseserver.h \
