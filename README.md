@@ -9,7 +9,7 @@ Open the MicroMouse-Simulator\microMouseServer\microMouseServer folder and acces
 
 * The following are the eight functions that you can call. Feel free to create your own fuctions as well. Remember that any solution that calls moveForward more than once per call of studentAI() will have points deducted.
  
-   - The following functions return if there is a wall in their respective directions
+- The following functions return if there is a wall in their respective directions
 
 ```cpp
 bool isWallLeft();
@@ -17,14 +17,14 @@ bool isWallRight();
 bool isWallForward();
 ```
 
-   - The following functions move the mouse. Move forward returns if the mouse was able to move forward and can be used for error checking
+ - The following functions move the mouse. Move forward returns if the mouse was able to move forward and can be used for error checking
 ```cpp
 bool moveForward();
 void turnLeft();
 void turnRight();
 ```
 
-   - The following functions are called when you need to output something to the UI or when you have finished the maze
+  - The following functions are called when you need to output something to the UI or when you have finished the maze
 ```cpp
 void foundFinish();
 void printUI(const char *mesg);
