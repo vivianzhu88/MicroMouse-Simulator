@@ -73,7 +73,7 @@ int numOfTimesRight(int dir, int x, int y, int (&map)[20][20])
 
 void microMouseServer::studentAI()
 {
-    /*
+    /* Comment block
  * The following are the eight functions that you can call. Feel free to create your own fuctions as well.
  * Remember that any solution that calls moveForward more than once per call of studentAI() will have points deducted.
  *
