@@ -68,34 +68,22 @@ void microMouseServer::studentAI()
     static int map [20][20] = {0};
     static int x=0, y=0, dir=0;
 
-    if (!isWallLeft())
+    if(!isWallLeft() &&
+       !(!isWallForward() && numOfTimesLeft(dir, x, y, map) > numOfTimesForward(dir, x, y, map)) &&
+       !(!isWallRight() && numOfTimesLeft(dir, x, y, map) > numOfTimesRight(dir, x, y, map))
+      )
     {
-        if (!isWallForward() && isWallRight() && (numOfTimesLeft(dir, x, y, map) > numOfTimesForward(dir, x, y, map))){}
-        else if (!isWallRight() && isWallForward() && (numOfTimesLeft(dir, x, y, map) > numOfTimesRight(dir, x, y, map)))
-        {
-            turnRight();
-            myTurnRight(&dir);
-        }
-        else if (!isWallForward() && !isWallRight() && (numOfTimesForward(dir, x, y, map) < numOfTimesRight(dir, x, y, map)) && (numOfTimesLeft(dir, x, y, map) > numOfTimesForward(dir, x, y, map))){}
-        else if (!isWallForward() && !isWallRight() && (numOfTimesForward(dir, x, y, map) > numOfTimesRight(dir, x, y, map)) && (numOfTimesLeft(dir, x, y, map) > numOfTimesRight(dir, x, y, map)))
-        {
-            turnRight();
-            myTurnRight(&dir);
-        }
-        else
-        {
-            turnLeft();
-            myTurnLeft(&dir);
-        }
+        turnLeft();
+        myTurnLeft(&dir);
     }
-    else if (!isWallForward()){
-        if (!isWallRight() && (numOfTimesForward(dir, x, y, map) > numOfTimesRight(dir, x, y, map)))
-        {
-            turnRight();
-            myTurnRight(&dir);
-        }
-    }
-    else if (!isWallRight())
+    else if (!isWallForward() &&
+         !(!isWallLeft() && numOfTimesForward(dir, x, y, map) > numOfTimesLeft(dir, x, y, map)) &&
+         !(!isWallRight() && numOfTimesForward(dir, x, y, map) > numOfTimesRight(dir, x, y, map))
+             ){}
+    else if (!isWallRight() &&
+         !(!isWallLeft() && numOfTimesRight(dir, x, y, map) > numOfTimesLeft(dir, x, y, map)) &&
+         !(!isWallForward() && numOfTimesRight(dir, x, y, map) > numOfTimesForward(dir, x, y, map))
+             )
     {
         turnRight();
         myTurnRight(&dir);
@@ -126,9 +114,17 @@ void microMouseServer::studentAI()
     }
     else if ((i==4) && isWallLeft() && !isWallForward() && !isWallRight() ){
         foundFinish();
+        memset(map, 0, sizeof(map));
+        dir=0;
+        x=0;
+        y=0;
     }
     else if ((i==9) && !isWallLeft() && isWallForward() && !isWallRight() ){
         foundFinish();
+        memset(map, 0, sizeof(map));
+        dir=0;
+        x=0;
+        y=0;
     }
     else {
           i=0;
