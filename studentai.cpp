@@ -29,44 +29,17 @@ int numOfTimesLeft(int dir, int x, int y, int (&map)[20][20])
 {
     myTurnLeft(&dir);
     myMoveForward(&dir, &x, &y);
-    if(x>19)
-        x=19;
-    else if(x<0)
-        x=0;
-    else if(y<0)
-        y=0;
-    else if(y>=20)
-        y=19;
-
     return map[x][y];
 }
 int numOfTimesForward(int dir, int x, int y, int (&map)[20][20])
 {
     myMoveForward(&dir, &x, &y);
-    if(x>19)
-        x=19;
-    else if(x<0)
-        x=0;
-    else if(y<0)
-        y=0;
-    else if(y>=20)
-        y=19;
-
     return map[x][y];
 }
 int numOfTimesRight(int dir, int x, int y, int (&map)[20][20])
 {
     myTurnRight(&dir);
     myMoveForward(&dir, &x, &y);
-    if(x>19)
-        x=19;
-    else if(x<0)
-        x=0;
-    else if(y<0)
-        y=0;
-    else if(y>=20)
-        y=19;
-
     return map[x][y];
 }
 
@@ -97,33 +70,46 @@ void microMouseServer::studentAI()
 
     if (!isWallLeft())
     {
-        if (!isWallForward() && (numOfTimesLeft(dir, x, y, map) > numOfTimesForward(dir, x, y, map))){}
-        else if (!isWallRight() && (numOfTimesLeft(dir, x, y, map) > numOfTimesRight(dir, x, y, map)))
+        if (!isWallForward() && isWallRight() && (numOfTimesLeft(dir, x, y, map) > numOfTimesForward(dir, x, y, map))){}
+        else if (!isWallRight() && isWallForward() && (numOfTimesLeft(dir, x, y, map) > numOfTimesRight(dir, x, y, map)))
         {
-            myTurnRight(&dir);
             turnRight();
+            myTurnRight(&dir);
+        }
+        else if (!isWallForward() && !isWallRight() && (numOfTimesForward(dir, x, y, map) < numOfTimesRight(dir, x, y, map)) && (numOfTimesLeft(dir, x, y, map) > numOfTimesForward(dir, x, y, map))){}
+        else if (!isWallForward() && !isWallRight() && (numOfTimesForward(dir, x, y, map) > numOfTimesRight(dir, x, y, map)) && (numOfTimesLeft(dir, x, y, map) > numOfTimesRight(dir, x, y, map)))
+        {
+            turnRight();
+            myTurnRight(&dir);
         }
         else
         {
-            myTurnLeft(&dir);
             turnLeft();
+            myTurnLeft(&dir);
+        }
+    }
+    else if (!isWallForward()){
+        if (!isWallRight() && (numOfTimesForward(dir, x, y, map) > numOfTimesRight(dir, x, y, map)))
+        {
+            turnRight();
+            myTurnRight(&dir);
         }
     }
     else if (!isWallRight())
     {
-        myTurnRight(&dir);
         turnRight();
+        myTurnRight(&dir);
     }
-    else if(isWallForward())
+    else
     {
-        myTurnRight(&dir);
-        myTurnRight(&dir);
         turnRight();
         turnRight();
+        myTurnRight(&dir);
+        myTurnRight(&dir);
     }
-    map[x][y] += 1;
     myMoveForward(&dir, &x, &y);
     moveForward();
+    map[x][y] += 1;
 
 
     if (i==0 && !isWallLeft() && !isWallForward() && isWallRight() ){
@@ -138,7 +124,10 @@ void microMouseServer::studentAI()
         i++;
         printUI("i");
     }
-    else if ((i==4 || i==9) && !isWallLeft() && isWallForward() && !isWallRight() ){
+    else if ((i==4) && isWallLeft() && !isWallForward() && !isWallRight() ){
+        foundFinish();
+    }
+    else if ((i==9) && !isWallLeft() && isWallForward() && !isWallRight() ){
         foundFinish();
     }
     else {
