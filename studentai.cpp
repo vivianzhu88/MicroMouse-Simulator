@@ -64,10 +64,12 @@ void microMouseServer::studentAI()
  * void foundFinish();
  * void printUI(const char *mesg);
 */
-    static int i=0;
+    //static int i=0;
     static int map [20][20] = {0};
     static int x=0, y=0, dir=0;
+    static int Lcount, Rcount;
 
+    //Making way through maze
     if(!isWallLeft() &&
        !(!isWallForward() && numOfTimesLeft(dir, x, y, map) > numOfTimesForward(dir, x, y, map)) &&
        !(!isWallRight() && numOfTimesLeft(dir, x, y, map) > numOfTimesRight(dir, x, y, map))
@@ -75,11 +77,17 @@ void microMouseServer::studentAI()
     {
         turnLeft();
         myTurnLeft(&dir);
+        Lcount += 1;
+        Rcount = 0;
     }
     else if (!isWallForward() &&
          !(!isWallLeft() && numOfTimesForward(dir, x, y, map) > numOfTimesLeft(dir, x, y, map)) &&
          !(!isWallRight() && numOfTimesForward(dir, x, y, map) > numOfTimesRight(dir, x, y, map))
-             ){}
+             )
+    {
+        Lcount = 0;
+        Rcount = 0;
+    }
     else if (!isWallRight() &&
          !(!isWallLeft() && numOfTimesRight(dir, x, y, map) > numOfTimesLeft(dir, x, y, map)) &&
          !(!isWallForward() && numOfTimesRight(dir, x, y, map) > numOfTimesForward(dir, x, y, map))
@@ -87,6 +95,8 @@ void microMouseServer::studentAI()
     {
         turnRight();
         myTurnRight(&dir);
+        Lcount = 0;
+        Rcount += 1;
     }
     else
     {
@@ -95,38 +105,21 @@ void microMouseServer::studentAI()
         myTurnRight(&dir);
         myTurnRight(&dir);
     }
-    myMoveForward(&dir, &x, &y);
-    moveForward();
-    map[x][y] += 1;
 
-
-    if (i==0 && !isWallLeft() && !isWallForward() && isWallRight() ){
-        i=1;
-        printUI("1");
-    }
-    else if (i==0 && isWallLeft() && !isWallForward() && !isWallRight() ){
-        i=6;
-        printUI("6");
-    }
-    else if ((i==1 || i==2 || i==3 || i==6 || i==7 || i==8) && isWallLeft() && isWallForward() && !isWallRight() ){
-        i++;
-        printUI("i");
-    }
-    else if ((i==4) && isWallLeft() && !isWallForward() && !isWallRight() ){
+    //Finish or keep going
+    if (Lcount == 3 || Rcount == 3)
+    {
         foundFinish();
         memset(map, 0, sizeof(map));
         dir=0;
         x=0;
         y=0;
     }
-    else if ((i==9) && !isWallLeft() && isWallForward() && !isWallRight() ){
-        foundFinish();
-        memset(map, 0, sizeof(map));
-        dir=0;
-        x=0;
-        y=0;
+    else
+    {
+        myMoveForward(&dir, &x, &y);
+        moveForward();
+        map[x][y] += 1;
     }
-    else {
-          i=0;
-        printUI("0");}
-    }
+
+}
