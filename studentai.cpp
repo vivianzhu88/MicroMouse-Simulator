@@ -106,7 +106,7 @@ void microMouseServer::studentAI()
         myTurnRight(&dir);
     }
 
-    //Finish or keep going
+    //End or continue
     if (Lcount == 3 || Rcount == 3)
     {
         foundFinish();
