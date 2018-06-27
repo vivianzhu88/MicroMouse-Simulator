@@ -1,5 +1,7 @@
 
 #include "micromouseserver.h"
+
+//keep track of direction
 void myTurnLeft(int *dir)
 {
     if (*dir==0)
@@ -25,6 +27,8 @@ void myTurnRight(int *dir)
     else *dir+=1;
 
 }
+
+//Keeps track of how many times mouse has been at certain square
 int numOfTimesLeft(int dir, int x, int y, int (&map)[20][20])
 {
     myTurnLeft(&dir);
@@ -42,7 +46,6 @@ int numOfTimesRight(int dir, int x, int y, int (&map)[20][20])
     myMoveForward(&dir, &x, &y);
     return map[x][y];
 }
-
 
 void microMouseServer::studentAI()
 {
@@ -64,7 +67,7 @@ void microMouseServer::studentAI()
  * void foundFinish();
  * void printUI(const char *mesg);
 */
-    //static int i=0;
+
     static int map [20][20] = {0};
     static int x=0, y=0, dir=0;
     static int Lcount, Rcount;
@@ -104,6 +107,8 @@ void microMouseServer::studentAI()
         turnRight();
         myTurnRight(&dir);
         myTurnRight(&dir);
+        Lcount = 0;
+        Rcount = 0;
     }
 
     //End or continue
