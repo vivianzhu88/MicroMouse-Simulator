@@ -56,6 +56,7 @@ int numOfTimesRight(int dir, int x, int y, NODE (&map)[20][20])
     myMoveForward(&dir, &x, &y);
     return map[x][y].timesVisited;
 }
+
 void linkCell(int dir, int x, int y, NODE (&map)[20][20])
 {
     if(dir==0)
@@ -67,37 +68,105 @@ void linkCell(int dir, int x, int y, NODE (&map)[20][20])
     else
         map[x][y].west = &map[x-1][y];
 }
+
 void findShortestPath(NODE (&map)[20][20])
 {
+
     QQueue<NODE*> queue;
     int x=0, y=0;
-    NODE holder;
+    NODE *holder;
+    bool loop =false;
 
-    queue.enqueue(map[x][y].north);
-    queue.enqueue(map[x][y].south);
-    queue.enqueue(map[x][y].east);
-    queue.enqueue(map[x][y].west);
-
-    //
-    while(!holder.isEnd)
+    if (map[x][y].north)
     {
-        holder = *queue.dequeue();
-        if (holder.isEnd){
-            holder.isEnd = true;
-            continue;
+        if(!map[x][y].north->hasQ)
+        {
+            queue.enqueue(map[x][y].north);
+            map[x][y].north->hasQ = true;
+            map[x][y].north->previous = &(map[x][y]);
         }
-        queue.enqueue(holder.north);
-        queue.enqueue(holder.south);
-        queue.enqueue(holder.east);
-        queue.enqueue(holder.west);
+    }
+    if (map[x][y].south)
+    {
+        if (!map[x][y].south->hasQ)
+        {
+            queue.enqueue(map[x][y].south);
+            map[x][y].south->hasQ = true;
+            map[x][y].south->previous = &map[x][y];
+        }
+    }
+    if (map[x][y].east)
+    {
+        if(!map[x][y].east->hasQ)
+        {
+            queue.enqueue(map[x][y].east);
+            map[x][y].east->hasQ = true;
+            map[x][y].east->previous = &map[x][y];
+        }
+    }
+    if (map[x][y].west)
+    {
+        if(!map[x][y].west->hasQ)
+        {
+            queue.enqueue(map[x][y].west);
+            map[x][y].west->hasQ = true;
+            map[x][y].west->previous = &map[x][y];
+        }
+    }
+
+    // find path to end
+    while(!loop)
+    {
+        holder = queue.dequeue();
+
+        loop = holder->isEnd;
+
+        // queues only if hasQ is false
+        if (holder->north)
+        {
+            if(!holder->north->hasQ)
+            {
+                queue.enqueue(holder->north);
+                holder->north->hasQ = true;
+                holder->north->previous = holder;
+            }
+        }
+        if (holder->south)
+        {
+            if(!holder->south->hasQ)
+            {
+                queue.enqueue(holder->south);
+                holder->south->hasQ = true;
+                holder->south->previous = holder;
+            }
+        }
+        if (holder->east)
+        {
+            if(!holder->east->hasQ)
+            {
+                queue.enqueue(holder->east);
+                holder->east->hasQ = true;
+                holder->east->previous = holder;
+            }
+        }
+        if (holder->west)
+        {
+            if(!holder->west->hasQ)
+            {
+                queue.enqueue(holder->west);
+                holder->west->hasQ = true;
+                holder->west->previous = holder;
+            }
+        }
     }
 
     // set timesVisited of nodes in shortest path to 0
-    while(!holder.isStart)
+    while(!holder->isStart)
     {
-        holder.timesVisited = 0;
-        holder = *holder.previous;
+        holder->timesVisited = 0;
+        holder = holder->previous;
     }
+
 }
 
 void microMouseServer::studentAI()
@@ -138,13 +207,15 @@ void microMouseServer::studentAI()
         if(!isWallForward()){
             linkCell(dir, x, y, map);
         }
+        turnRight();
+        myTurnRight(&dir);
     }
 
     //Making way through maze
     if(!isWallLeft() &&
        !(!isWallForward() && numOfTimesLeft(dir, x, y, map) > numOfTimesForward(dir, x, y, map)) &&
        !(!isWallRight() && numOfTimesLeft(dir, x, y, map) > numOfTimesRight(dir, x, y, map))
-      )
+            )
     {
         turnLeft();
         myTurnLeft(&dir);
@@ -162,7 +233,7 @@ void microMouseServer::studentAI()
     else if (!isWallRight() &&
          !(!isWallLeft() && numOfTimesRight(dir, x, y, map) > numOfTimesLeft(dir, x, y, map)) &&
          !(!isWallForward() && numOfTimesRight(dir, x, y, map) > numOfTimesForward(dir, x, y, map))
-             )
+          )
     {
         turnRight();
         myTurnRight(&dir);
