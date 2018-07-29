@@ -2,8 +2,6 @@
 #include <QQueue>
 using namespace std;
 
-//keep track of direction
-
 typedef struct node
 {
     int timesVisited;
@@ -11,6 +9,7 @@ typedef struct node
     struct node *previous, *north, *south, *east, *west;
 }NODE;
 
+// myTurnLeft, myMoveForward, myMoveRight keep track of mouse's direction as it turns and moves forward
 void myTurnLeft(int *dir)
 {
     if (*dir==0)
@@ -36,7 +35,7 @@ void myTurnRight(int *dir)
     else *dir+=1;
 }
 
-//Keeps track of how many times mouse has been at certain square
+// numOfTimesLeft, numOfTimesForward, numOfTimesRight fetche how many times the mouse has been at certain square
 int numOfTimesLeft(int dir, int x, int y, NODE (&map)[20][20])
 {
     myTurnLeft(&dir);
@@ -57,6 +56,7 @@ int numOfTimesRight(int dir, int x, int y, NODE (&map)[20][20])
     return map[x][y].timesVisited;
 }
 
+// links the cell in front of the current cell (saves in N/S/E/W depending on direction mouse is facing)
 void linkCell(int dir, int x, int y, NODE (&map)[20][20])
 {
     if(dir==0)
@@ -69,14 +69,15 @@ void linkCell(int dir, int x, int y, NODE (&map)[20][20])
         map[x][y].west = &map[x-1][y];
 }
 
+// finds shortest path through maze
 void findShortestPath(NODE (&map)[20][20])
 {
-
     QQueue<NODE*> queue;
     int x=0, y=0;
     NODE *holder;
     bool loop =false;
 
+    // adds cells connected to map[0][0] into the queue
     if (map[x][y].north)
     {
         if(!map[x][y].north->hasQ)
@@ -117,8 +118,11 @@ void findShortestPath(NODE (&map)[20][20])
     // find path to end
     while(!loop)
     {
-        holder = queue.dequeue();
+        if(queue.empty()){
+            break;
+        }
 
+        holder = queue.dequeue();
         loop = holder->isEnd;
 
         // queues only if hasQ is false
@@ -168,7 +172,6 @@ void findShortestPath(NODE (&map)[20][20])
         if(holder->isStart){
             break;
         }
-
     }
 }
 
@@ -269,5 +272,4 @@ void microMouseServer::studentAI()
         moveForward();
         map[x][y].timesVisited += 1;
     }
-
 }
