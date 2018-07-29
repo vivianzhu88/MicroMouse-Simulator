@@ -165,8 +165,11 @@ void findShortestPath(NODE (&map)[20][20])
     {
         holder->timesVisited = 0;
         holder = holder->previous;
-    }
+        if(holder->isStart){
+            break;
+        }
 
+    }
 }
 
 void microMouseServer::studentAI()
