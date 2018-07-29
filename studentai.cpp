@@ -256,13 +256,12 @@ void microMouseServer::studentAI()
     //End or continue
     if (Lcount == 3 || Rcount == 3)
     {
-        foundFinish();
         map[x][y].isEnd = true;
+        foundFinish();
         findShortestPath(map);
-        /*memset(map, 0, sizeof(map));
         dir=0;
         x=0;
-        y=0;*/
+        y=0;
     }
     else
     {
